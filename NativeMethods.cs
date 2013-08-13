@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
+/// This is copied from http://gitcredentialstore.codeplex.com/
 namespace askpass {
 	internal static class NativeMethods {
 		[DllImport("Advapi32.dll", SetLastError = true, EntryPoint = "CredWriteW", CharSet = CharSet.Unicode)]
