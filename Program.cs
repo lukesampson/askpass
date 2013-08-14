@@ -28,22 +28,22 @@ namespace askpass {
 
 			var password = SavedPassword(key);
 			if(password != null) {
-				Log("got saved password: " + password);
-				Console.WriteLine(password);
+				Log("found saved password");
+				Console.WriteLine(password); // send password to ssh-add
 			} else {
 				Log("no saved password for " + key);
 				password = PromptForPassword(key);
 				if(password == null) {
 					Environment.Exit(1); // failed: agent should ignore output
 				}
-
-				Log("collected password: " + password);								
+				Log("collected password: " + password);							
+				Console.WriteLine(password);
 			}
 		}
 
 		static string PromptForPassword(string key) {
 			var credPtr = IntPtr.Zero;
-			string username = null;
+			string username = "(username ignored)";
 			string password = null;
 
 			// If we have a username, pack an input authentication buffer
@@ -57,13 +57,14 @@ namespace askpass {
 				// Setup UI
 				NativeMethods.CREDUI_INFO ui = new NativeMethods.CREDUI_INFO() {
 					pszCaptionText = "SSH Key password",
-					pszMessageText = "Enter the passphrase for " + key
+					pszMessageText = "Enter the passphrase for " + key,
 				};
 				ui.cbSize = Marshal.SizeOf(ui);
 
 				// Prompt!
 				int authPackage = 0;
 				bool save = false;
+				
 				var ret = NativeMethods.CredUIPromptForWindowsCredentials(
 					uiInfo: ref ui,
 					authError: 0,

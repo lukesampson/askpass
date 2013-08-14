@@ -31,6 +31,31 @@ namespace askpass {
 			ref bool fSave,
 			PromptForWindowsCredentialsFlags flags);
 
+		/*
+		CredUICmdLinePromptForCredentials(
+		  _In_      PCTSTR pszTargetName,
+		  _In_      PCtxtHandle Reserved,
+		  _In_opt_  DWORD dwAuthError,
+		  _Inout_   PTSTR pszUserName,
+		  _In_      ULONG ulUserNameMaxChars,
+		  _Inout_   PTSTR pszPassword,
+		  _In_      ULONG ulPasswordMaxChars,
+		  _Inout_   PBOOL pfSave,
+		  _In_      DWORD dwFlags
+		);*/
+
+		[DllImport("credui.dll", CharSet = CharSet.Unicode)]
+		public static extern CredUIReturnCodes CredUICmdLinePromptForCredentials(
+			string target,
+			IntPtr reserved,
+			int authError,
+			ref string username,
+			int usernameMaxChars,
+			ref string password,
+			int passwordMaxChars,
+			ref bool fSave,
+			CmdLinePromptForCredentialsFlags flags);
+
 		[DllImport("credui.dll", CharSet = CharSet.Auto)]
 		public static extern bool CredUnPackAuthenticationBuffer(
 			int dwFlags,
@@ -98,6 +123,17 @@ namespace askpass {
 			/// The credential provider should align the credential BLOB pointed to by the refOutAuthBuffer parameter to a 32-bit boundary, even if the provider is running on a 64-bit system.
 			/// </summary>
 			CREDUIWIN_PACK_32_WOW = 0x10000000,
+		}
+
+		public enum CmdLinePromptForCredentialsFlags {
+			CREDUI_FLAGS_ALWAYS_SHOW_UI = 0x00080,
+			CREDUI_FLAGS_DO_NOT_PERSIST = 0x00002,
+			CREDUI_FLAGS_EXCLUDE_CERTIFICATES = 0x00008,
+			CREDUI_FLAGS_EXPECT_CONFIRMATION = 0x20000,
+			CREDUI_FLAGS_GENERIC_CREDENTIALS = 0x40000,
+			CREDUI_FLAGS_PERSIST = 0x01000,
+			CREDUI_FLAGS_SHOW_SAVE_CHECK_BOX = 0x00040,
+			CREDUI_FLAGS_USERNAME_TARGET_CREDENTIALS = 0x80000
 		}
 
 		public enum CRED_TYPE : int {
