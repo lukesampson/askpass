@@ -42,6 +42,10 @@ namespace askpass {
 		}
 
 		static string PromptForPassword(string key) {
+			System.Windows.Forms.Application.EnableVisualStyles();
+			new PasswordPrompt().ShowDialog();
+			return null;
+
 			var credPtr = IntPtr.Zero;
 			string username = "(username ignored)";
 			string password = null;
