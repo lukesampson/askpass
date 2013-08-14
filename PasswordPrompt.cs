@@ -10,12 +10,21 @@ using System.Windows.Forms;
 
 namespace askpass {
 	public partial class PasswordPrompt : Form {
-		public PasswordPrompt() {
+		public PasswordPrompt(string key) {
 			InitializeComponent();
+
+			passwordLabel.Text = "Password for " + key;
+			passwordText.Focus();
 		}
 
-		private void label1_Click(object sender, EventArgs e) {
+		public string Password {
+			get {
+				return passwordText.Text;
+			}
+		}
 
+		private void ok_Click(object sender, EventArgs e) {
+			this.DialogResult = DialogResult.OK;
 		}
 	}
 }
