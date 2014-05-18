@@ -88,19 +88,21 @@ namespace askpass {
 
 			// Decode the credential
 			var cred = (NativeMethods.CREDENTIAL)Marshal.PtrToStructure(credPtr, typeof(NativeMethods.CREDENTIAL));
-			return Marshal.PtrToStringBSTR(cred.credentialBlob);
+
+			var bytes = new byte[cred.credentialBlobSize];
+			Marshal.Copy(cred.credentialBlob, bytes, 0, bytes.Length);
+			return Encoding.Unicode.GetString(bytes);
 		}
 
 		static bool SavePassword(string key, string password) {
 			string target = "ssh:" + key;
-			IntPtr passwordPtr = Marshal.StringToBSTR(password);
 			NativeMethods.CREDENTIAL cred = new NativeMethods.CREDENTIAL() {
 				type = 0x01, // Generic
 				targetName = target,
 				credentialBlob = Marshal.StringToCoTaskMemUni(password),
 				persist = 0x02, // Local machine
 				attributeCount = 0,
-				userName = "(N/A)"
+				userName = "(n/a)"
 			};
 			cred.credentialBlobSize = Encoding.Unicode.GetByteCount(password);
 			if(!NativeMethods.CredWrite(ref cred, 0)) {
